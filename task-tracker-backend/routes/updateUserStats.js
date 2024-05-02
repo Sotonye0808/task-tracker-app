@@ -31,19 +31,19 @@ router.post('/', async (req, res) => {
     const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    if (now.getTime() === startOfDay.getTime()) {
+    if (today.getTime() === startOfDay.getTime()) {
       //reset users stats daily
       userData.daily.tasksAdded = 0;
       userData.daily.tasksRemoved = 0;
     }
 
-    if (now.getTime() === startOfWeek.getTime()) {
+    if (today.getTime() === startOfWeek.getTime()) {
       //reset users stats weekly
       userData.weekly.tasksAdded = 0;
       userData.weekly.tasksRemoved = 0;
     }
 
-    if (now.getTime() === startOfMonth.getTime()) {
+    if (today.getTime() === startOfMonth.getTime()) {
       //reset users stats monthly
       userData.monthly.tasksAdded = 0;
       userData.monthly.tasksRemoved = 0;
