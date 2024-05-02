@@ -31,6 +31,7 @@ This is a simple task tracker app built using React. It allows users to track th
 ### Backend
 * Express
 * MongoDB and Mongoose
+* Node.js
 
 ---
 
