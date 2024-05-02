@@ -1,7 +1,7 @@
-// models/UserStats.js
+// models/UserData.js
 const mongoose = require('mongoose');
 
-const userStatsSchema = new mongoose.Schema({
+const UserData = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
@@ -36,7 +36,23 @@ const userStatsSchema = new mongoose.Schema({
       type: Number,
       default: 0
     }
-  }
+  },
+  tasks: [{
+    title: {
+      type: String,
+      required: true,
+    },
+    description: String,
+    date: Date,
+    reminder: {
+      type: Boolean,
+      default: false,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    }
+  }]
 });
 
-module.exports = mongoose.model('UserStats', userStatsSchema);
+module.exports = mongoose.model('UserData', UserData);

@@ -1,43 +1,39 @@
 // routes/stats.js
 const express = require('express');
 const router = express.Router();
-const Task = require('../models/Task');
-const UserStats = require('../models/UserStats');
+const UserData = require('../models/UserData');
 
-// Get statistics
+// Get statistics for a specific user
 router.get('/', async (req, res) => {
   try {
-    const userId = req.ip; // Assuming IP address is used as the user identifier
-    const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const userId = req.ip; // Extract userId from user's IP address
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
 
-    // Query database for user statistics
-    let userStats = await UserStats.findOne({ userId });
-    if (!userStats) {
-      userStats = new UserStats({ userId });
-      await userStats.save();
+    // Find user data based on userId
+    let userData = await UserData.findOne({ userId });
+    if (!userData) {
+      // If no user data found, return empty statistics
+      userData = new UserData({ userId });
+      await userData.save();
     }
 
     // Calculate daily, weekly, and monthly statistics
-    const dailyTasks = await Task.find({ createdAt: { $gte: startOfDay }, userId });
-    const weeklyTasks = await Task.find({ createdAt: { $gte: startOfWeek }, userId });
-    const monthlyTasks = await Task.find({ createdAt: { $gte: startOfMonth }, userId });
+    const dailyTasksAdded = userData.daily.tasksAdded || 0;
+    const dailyTasksRemoved = userData.daily.tasksRemoved || 0;
 
-    // Update user statistics
-    userStats.daily.tasksAdded = dailyTasks.filter(task => !task.removed).length;
-    userStats.daily.tasksRemoved = dailyTasks.filter(task => task.removed).length;
+    const weeklyTasksAdded = userData.weekly.tasksAdded || 0;
+    const weeklyTasksRemoved = userData.weekly.tasksRemoved || 0;
 
-    userStats.weekly.tasksAdded = weeklyTasks.filter(task => !task.removed).length;
-    userStats.weekly.tasksRemoved = weeklyTasks.filter(task => task.removed).length;
+    const monthlyTasksAdded = userData.monthly.tasksAdded || 0;
+    const monthlyTasksRemoved = userData.monthly.tasksRemoved || 0;
 
-    userStats.monthly.tasksAdded = monthlyTasks.filter(task => !task.removed).length;
-    userStats.monthly.tasksRemoved = monthlyTasks.filter(task => task.removed).length;
-
-    await userStats.save();
-
-    res.json(userStats);
+    res.json({
+      daily: { tasksAdded: dailyTasksAdded, tasksRemoved: dailyTasksRemoved },
+      weekly: { tasksAdded: weeklyTasksAdded, tasksRemoved: weeklyTasksRemoved },
+      monthly: { tasksAdded: monthlyTasksAdded, tasksRemoved: monthlyTasksRemoved }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
