@@ -12,8 +12,6 @@ router.get('/', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
     res.json(userData.tasks);
-    //log schema to console
-    console.log(userData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -30,8 +28,6 @@ router.post('/', async (req, res) => {
       { new: true, upsert: true }
     );
     res.status(201).json(userData.tasks);
-    //log schema to console
-    console.log(userData);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -49,8 +45,6 @@ router.delete('/:taskId', async (req, res) => { // Add ':taskId' to capture task
       return res.status(404).json({ message: 'User not found' });
     }
     res.json(userData.tasks);
-    //log schema to console
-    console.log(userData);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
