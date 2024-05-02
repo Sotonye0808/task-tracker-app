@@ -25,15 +25,39 @@ router.post('/', async (req, res) => {
       userData = new UserData({ userId });
     }
 
+    // Reset stats if it's the start of a new day, week, or month
+    const today = new Date();
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
+    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    if (now.getTime() === startOfDay.getTime()) {
+      //reset users stats daily
+      userData.daily.tasksAdded = 0;
+      userData.daily.tasksRemoved = 0;
+    }
+
+    if (now.getTime() === startOfWeek.getTime()) {
+      //reset users stats weekly
+      userData.weekly.tasksAdded = 0;
+      userData.weekly.tasksRemoved = 0;
+    }
+
+    if (now.getTime() === startOfMonth.getTime()) {
+      //reset users stats monthly
+      userData.monthly.tasksAdded = 0;
+      userData.monthly.tasksRemoved = 0;
+    }
+
     // Increment the appropriate fields based on the action
     if (action === 'add') {
-      userData.daily.tasksAdded = (userData.daily.tasksAdded || 0) + 1;
-      userData.weekly.tasksAdded = (userData.weekly.tasksAdded || 0) + 1;
-      userData.monthly.tasksAdded = (userData.monthly.tasksAdded || 0) + 1;
+      userData.daily.tasksAdded++;
+      userData.weekly.tasksAdded++;
+      userData.monthly.tasksAdded++;
     } else if (action === 'remove') {
-      userData.daily.tasksRemoved = (userData.daily.tasksRemoved || 0) + 1;
-      userData.weekly.tasksRemoved = (userData.weekly.tasksRemoved || 0) + 1;
-      userData.monthly.tasksRemoved = (userData.monthly.tasksRemoved || 0) + 1;
+      userData.daily.tasksRemoved++;
+      userData.weekly.tasksRemoved++;
+      userData.monthly.tasksRemoved++;
     } else {
       return res.status(400).json({ message: 'Invalid action' });
     }
