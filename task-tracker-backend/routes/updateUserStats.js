@@ -31,24 +31,6 @@ router.post('/', async (req, res) => {
     const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
     const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
-    if (today.getTime() === startOfDay.getTime()) {
-      //reset users stats daily
-      userData.daily.tasksAdded = 0;
-      userData.daily.tasksRemoved = 0;
-    }
-
-    if (today.getTime() === startOfWeek.getTime()) {
-      //reset users stats weekly
-      userData.weekly.tasksAdded = 0;
-      userData.weekly.tasksRemoved = 0;
-    }
-
-    if (today.getTime() === startOfMonth.getTime()) {
-      //reset users stats monthly
-      userData.monthly.tasksAdded = 0;
-      userData.monthly.tasksRemoved = 0;
-    }
-
     // Increment the appropriate fields based on the action
     if (action === 'add') {
       userData.daily.tasksAdded++;
@@ -58,6 +40,24 @@ router.post('/', async (req, res) => {
       userData.daily.tasksRemoved++;
       userData.weekly.tasksRemoved++;
       userData.monthly.tasksRemoved++;
+    } else if (action === 'reset') {
+      if (today.getTime() === startOfDay.getTime()) {
+        //reset users stats daily
+        userData.daily.tasksAdded = 0;
+        userData.daily.tasksRemoved = 0;
+      }
+
+      if (today.getTime() === startOfWeek.getTime()) {
+        //reset users stats weekly
+        userData.weekly.tasksAdded = 0;
+        userData.weekly.tasksRemoved = 0;
+      }
+
+      if (today.getTime() === startOfMonth.getTime()) {
+        //reset users stats monthly
+        userData.monthly.tasksAdded = 0;
+        userData.monthly.tasksRemoved = 0;
+      }
     } else {
       return res.status(400).json({ message: 'Invalid action' });
     }
