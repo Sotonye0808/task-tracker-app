@@ -52,7 +52,11 @@ const UserData = new mongoose.Schema({
       type: Date,
       default: Date.now,
     }
-  }]
+  }],
+  lastUpdated: {
+    type: Date,
+    default: Date.now // Initialize to the current date and time
+  }
 });
 
 module.exports = mongoose.model('UserData', UserData);

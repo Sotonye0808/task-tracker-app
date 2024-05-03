@@ -25,11 +25,13 @@ router.post('/', async (req, res) => {
       userData = new UserData({ userId });
     }
 
-    // Reset stats if it's the start of a new day, week, or month
+    // Check if it's a new day/week/month and reset stats if necessary
     const today = new Date();
-    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastUpdated = userData.lastUpdated || new Date(0); // Initialize to epoch if not set
+    const isNewDay = today.getDate() !== lastUpdated.getDate();
+    const isNewWeek = today.getFullYear() !== lastUpdated.getFullYear() ||
+                      Math.floor(today.getDate() / 7) !== Math.floor(lastUpdated.getDate() / 7);
+    const isNewMonth = today.getMonth() !== lastUpdated.getMonth();
 
     // Increment the appropriate fields based on the action
     if (action === 'add') {
@@ -41,20 +43,17 @@ router.post('/', async (req, res) => {
       userData.weekly.tasksRemoved++;
       userData.monthly.tasksRemoved++;
     } else if (action === 'reset') {
-      if (today.getTime() === startOfDay.getTime()) {
-        //reset users stats daily
+      if (isNewDay) {
         userData.daily.tasksAdded = 0;
         userData.daily.tasksRemoved = 0;
       }
-
-      if (today.getTime() === startOfWeek.getTime()) {
-        //reset users stats weekly
+  
+      if (isNewWeek) {
         userData.weekly.tasksAdded = 0;
         userData.weekly.tasksRemoved = 0;
       }
-
-      if (today.getTime() === startOfMonth.getTime()) {
-        //reset users stats monthly
+  
+      if (isNewMonth) {
         userData.monthly.tasksAdded = 0;
         userData.monthly.tasksRemoved = 0;
       }
