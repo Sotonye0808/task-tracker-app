@@ -3,7 +3,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## [Task Tracker](https://sotonye0808.github.io/task-tracker-app)
+## [Task Tracker](https://task-tracker-2.vercel.app)
 
 This is a simple task tracker app built using React. It allows users to track their tasks by adding, deleting, and marking tasks as complete.
 
@@ -17,6 +17,7 @@ This is a simple task tracker app built using React. It allows users to track th
 
 ## Usage
 1. Clone the repository to your local machine or open this [link](https://sotonye0808.github.io/task-tracker-app)
+1. Create/Login to your MongoDB Atlas account, create a database and connect to it/get your MONGO_URI
 1. Navigate to the project directory in your terminal.
 1. Run npm install to install dependencies.
 1. Run npm start to start the development server.
@@ -35,5 +36,5 @@ This is a simple task tracker app built using React. It allows users to track th
 
 ---
 
-### Check it out here [Task Tracker](https://sotonye0808.github.io/task-tracker-app)
+### You will have to setup your own MongoDB cluster and have a server to host your backend if you wish to replicate this project and deploy fullscale. If you're just doing it for practice then the localhost should be fine.
 
